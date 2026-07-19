@@ -3329,6 +3329,132 @@ button[onclick*="toggleStepImage"] {
       </div>
     </div>
 
+    <!-- SUBTÍTULO: TÉCNICO RESIDENTE -->
+    <div class="col-12 mt-3">
+      <h4 style="color: var(--heading); font-size: 1.4rem; font-weight: bold; margin: 1rem 0 0.5rem 0; padding-bottom: 0.5rem; border-bottom: 3px solid var(--accent-light);">
+        Técnico Residente
+      </h4>
+    </div>
+
+    <!-- 11. EN CAMINO -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: EN CAMINO</div>
+        <div class="card-body-hp">
+          Técnico en camino para gestionar la atención.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp copy-btn" data-text="Buenos días, técnico residente se encuentra en camino para gestionar la atención.">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. GESTIONANDO OTRA ATENCIÓN -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: GESTIONANDO OTRA ATENCIÓN</div>
+        <div class="card-body-hp">
+          Técnico gestionando otra atención, se dirigirá en 30 minutos.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp copy-btn" data-text="Buenos días, técnico residente se encuentra gestionando otra atención en este momento. Se dirigirá al lugar en un plazo de 30 minutos para continuar con la gestión.">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. CORPORACIÓN MARIO ALVO HASSAN (remodelación) -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: CORPORACIÓN MARIO ALVO HASSAN</div>
+        <div class="card-body-hp">
+          Tribunal en remodelación, técnico visitará la atención a la hora indicada.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#horaTecnicoModal"
+              data-comment="Buenos días, técnico residente se encuentra en la Corporación Administrativa Central Mario Alvo Hassan, ya que el tribunal se encuentra en remodelación. El técnico visitará la atención a las {hora} hrs. Se recoordina la atención para el horario indicado.">
+            Ingresar Hora
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. SOLUCIÓN - PROCESO REALIZADO -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: SOLUCIÓN - PROCESO REALIZADO</div>
+        <div class="card-body-hp">
+          Detalle el proceso realizado para dar solución a la atención.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#procesoTecnicoModal">Ingresar Proceso</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. RECOORDINA POR OT FIRMADA -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: RECOORDINA POR OT FIRMADA</div>
+        <div class="card-body-hp">
+          Se recoordina el requerimiento para adjuntar orden de trabajo firmada.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#horaTecnicoModal"
+              data-comment="Se recoordina el requerimiento para las {hora} hrs, con el fin de adjuntar la orden de trabajo firmada.">
+            Ingresar Hora
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 16. USUARIO RECOORDINA (MISMO DÍA) -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: USUARIO RECOORDINA (MISMO DÍA)</div>
+        <div class="card-body-hp">
+          Técnico se dirige al lugar y usuario recoordina la atención para otra hora.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#horaTecnicoModal"
+              data-comment="Buenos días, técnico residente se dirige al lugar. Usuario recoordina la atención para las {hora} hrs.">
+            Ingresar Hora
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 17. USUARIO EN TELETRABAJO -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: USUARIO EN TELETRABAJO</div>
+        <div class="card-body-hp">
+          Usuario en teletrabajo, se planifica continuidad de la atención.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#fechaHoraTecnicoModal"
+              data-comment="Buenos días, técnico residente se dirige al lugar. Se indica que el usuario se encuentra en teletrabajo, por lo que se planifica la continuidad de la atención para el día {fecha} a las {hora} hrs.">
+            Ingresar Fecha/Hora
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 18. USUARIO RECOORDINA (OTRO DÍA) -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: USUARIO RECOORDINA (OTRO DÍA)</div>
+        <div class="card-body-hp">
+          Técnico se dirige al lugar y usuario recoordina la atención para otro día.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#fechaHoraTecnicoModal"
+              data-comment="Buenos días, técnico residente se dirige al lugar. Usuario recoordina la atención para el día {fecha} a las {hora} hrs.">
+            Ingresar Fecha/Hora
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <!-- FIN GRILLA -->
 
@@ -3490,6 +3616,68 @@ button[onclick*="toggleStepImage"] {
     </div>
   </div>
 
+  <!-- Modal Técnico Residente: solo Hora -->
+  <div class="modal fade" id="horaTecnicoModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ingresar Hora</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">Hora</label>
+          <input type="time" class="form-control" id="horaTecnico">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-hp" id="copiarHoraTecnico">Copiar Comentario</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Técnico Residente: Fecha y Hora -->
+  <div class="modal fade" id="fechaHoraTecnicoModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ingresar Fecha y Hora</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">Fecha</label>
+          <input type="date" class="form-control mb-3" id="fechaTecnico">
+          <label class="form-label">Hora</label>
+          <input type="time" class="form-control" id="horaFechaTecnico">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-hp" id="copiarFechaHoraTecnico">Copiar Comentario</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Técnico Residente: Proceso realizado -->
+  <div class="modal fade" id="procesoTecnicoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalle del Proceso Realizado</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">Ingrese cada paso del proceso en una línea distinta</label>
+          <textarea class="form-control" rows="6" id="procesoTexto" placeholder="Ej: Se reinstala driver de impresora&#10;Se realiza prueba de impresión&#10;Se valida con el usuario"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-hp" id="copiarProcesoTecnico">Copiar Comentario</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT FUNCIONALIDADES -->
   <script>
     const ahora = new Date();
@@ -3573,6 +3761,41 @@ button[onclick*="toggleStepImage"] {
       navigator.clipboard.writeText(text);
       mostrarFeedback();
       bootstrap.Modal.getInstance(document.getElementById('equipoFueraContratoModal')).hide();
+    });
+
+    // Técnico Residente: solo Hora
+    document.getElementById('copiarHoraTecnico')?.addEventListener('click', () => {
+      const hora = document.getElementById('horaTecnico').value;
+      if (!hora) return alert('Ingrese la hora');
+      let text = currentButton.getAttribute('data-comment');
+      text = text.replace(/\{hora\}/g, hora);
+      navigator.clipboard.writeText(text);
+      mostrarFeedback();
+      bootstrap.Modal.getInstance(document.getElementById('horaTecnicoModal')).hide();
+    });
+
+    // Técnico Residente: Fecha y Hora
+    document.getElementById('copiarFechaHoraTecnico')?.addEventListener('click', () => {
+      const fecha = document.getElementById('fechaTecnico').value;
+      const hora = document.getElementById('horaFechaTecnico').value;
+      if (!fecha || !hora) return alert('Complete fecha y hora');
+      const [y, m, d] = fecha.split('-');
+      let text = currentButton.getAttribute('data-comment');
+      text = text.replace(/\{fecha\}/g, `${d}/${m}/${y}`).replace(/\{hora\}/g, hora);
+      navigator.clipboard.writeText(text);
+      mostrarFeedback();
+      bootstrap.Modal.getInstance(document.getElementById('fechaHoraTecnicoModal')).hide();
+    });
+
+    // Técnico Residente: Proceso realizado
+    document.getElementById('copiarProcesoTecnico')?.addEventListener('click', () => {
+      const proceso = document.getElementById('procesoTexto').value.trim();
+      if (!proceso) return alert('Ingrese el detalle del proceso');
+      const pasos = proceso.split('\n').map(l => l.trim()).filter(Boolean).map(l => `- ${l}`).join('\n');
+      const text = `Buenos días, técnico residente da solución a la atención, realizando el siguiente proceso:\n\n${pasos}`;
+      navigator.clipboard.writeText(text);
+      mostrarFeedback();
+      bootstrap.Modal.getInstance(document.getElementById('procesoTecnicoModal')).hide();
     });
 
     // Solucionado CON verificación
