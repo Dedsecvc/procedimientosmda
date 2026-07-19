@@ -3741,7 +3741,7 @@ button[onclick*="toggleStepImage"] {
                 <input type="text" class="form-control" id="otHora" placeholder="HH:MM">
               </div>
             </div>
-            <label class="form-label">Descripción de la Solución (editable)</label>
+            <label class="form-label">Descripción de la Solución (detectada automáticamente de "descripción del Soporte" — puedes corregirla)</label>
             <textarea class="form-control mb-2" rows="5" id="otDescripcion"></textarea>
 
             <button type="button" class="btn-img-toggle" id="otToggleTexto">Ver texto OCR completo</button>
@@ -3945,8 +3945,16 @@ button[onclick*="toggleStepImage"] {
         if (anyMatches.length) hora = anyMatches[anyMatches.length - 1][1].replace(/\s+/g, '');
       }
 
+      // Se ancla solo en "descripci[oó]n" (sin exigir "del soporte" completo, ya que esa
+      // palabra suele salir mal en OCR de fotos/escaneos) y se toma todo hasta la
+      // siguiente sección conocida de la OT.
+      const cortes = '(?:\\n\\s*(?:Observaciones|Nota\\s*:|Firma|El siguiente documento)|$)';
       let descripcion = '';
-      const descMatch = texto.match(/descripci[oó0]n\s*del\s*soporte\s*([\s\S]*?)(?:Observaciones\s*del\s*Usuario|Observaciones|Nota\s*:|$)/i);
+      let descMatch = texto.match(new RegExp('descripci[oó0]n[^\\n]*\\n+([\\s\\S]*?)' + cortes, 'i'));
+      if (!descMatch) {
+        // Fallback: si ni "descripción" se reconoció, se busca a partir de "Soporte"
+        descMatch = texto.match(new RegExp('soporte[^\\n]*\\n+([\\s\\S]*?)' + cortes, 'i'));
+      }
       if (descMatch) {
         descripcion = descMatch[1].replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
       }
