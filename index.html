@@ -3955,10 +3955,12 @@ button[onclick*="toggleStepImage"] {
     }
 
     function construirComentarioOT(fecha, hora, descripcion) {
-      let text = 'Buenos días, técnico residente da solución a la atención';
-      if (fecha) text += ` con fecha ${fecha}`;
-      if (hora) text += ` a las ${hora} hrs`;
-      text += `, realizando el siguiente proceso:\n\n${descripcion}`;
+      let text = 'Buen día, técnico residente soluciona atención y realiza el siguiente proceso:\n\n';
+      text += descripcion;
+      const datos = [];
+      if (fecha) datos.push(`Fecha de Solución: ${fecha}`);
+      if (hora) datos.push(`Hora de Solución: ${hora}`);
+      if (datos.length) text += `\n\n${datos.join('\n')}`;
       return text;
     }
 
