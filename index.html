@@ -6980,6 +6980,370 @@ pause
   </div>
 </div>
 
+<style>
+  .cmd-group h4 {
+    color: var(--heading);
+    margin: 1.5rem 0 0.75rem 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--accent-light);
+  }
+  .cmd-group:first-of-type h4 { margin-top: 0.5rem; }
+
+  .cmd-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .cmd-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: var(--surface-muted);
+    border-left: 3px solid var(--accent-light);
+    border-radius: 6px;
+    padding: 0.65rem 1rem;
+  }
+
+  .cmd-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .cmd-item-code {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    color: var(--text-warn);
+    background: var(--surface-highlight);
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+    word-break: break-all;
+  }
+
+  .cmd-item-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .cmd-item .copy-btn {
+    flex-shrink: 0;
+  }
+
+  .cmd-vnc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    background: var(--surface-muted);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .cmd-vnc-table th, .cmd-vnc-table td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--surface-muted-2);
+  }
+
+  .cmd-vnc-table th {
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+  }
+
+  .cmd-vnc-table td.cmd-item-code {
+    margin: 0;
+  }
+</style>
+
+<div class="procedure-item">
+  <div class="procedure-header" onclick="toggleProcedure('procCmdRed')">
+    <span class="procedure-title">🌐 Comandos de Red y Mantenimiento (CMD / PowerShell)</span>
+    <span class="procedure-icon">▼</span>
+  </div>
+
+  <div id="procCmdRed" class="procedure-content">
+
+    <div class="procedure-intro">
+      <p>
+        Comandos de uso frecuente para diagnóstico de red, información del equipo y
+        reparación del sistema. Cada comando se puede copiar con un clic y pegar
+        directamente en <strong>CMD</strong> o <strong>PowerShell</strong> (según corresponda) ejecutado
+        como <strong>administrador</strong>.
+      </p>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Configuración de red (ipconfig)</h4>
+      <div class="cmd-list">
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">ipconfig /all</span>
+            <span class="cmd-item-desc">Ver toda la configuración de red: IP, máscara, gateway, DNS y MAC.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="ipconfig /all">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">ipconfig /release</span>
+            <span class="cmd-item-desc">Liberar la IP actual del equipo.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="ipconfig /release">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">ipconfig /renew</span>
+            <span class="cmd-item-desc">Renovar / obtener una IP nueva (cambiar IP asignada por DHCP).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="ipconfig /renew">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">ipconfig /flushdns</span>
+            <span class="cmd-item-desc">Limpiar la caché DNS del equipo.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="ipconfig /flushdns">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">ipconfig /displaydns</span>
+            <span class="cmd-item-desc">Ver el contenido actual de la caché DNS.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="ipconfig /displaydns">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">ipconfig /registerdns</span>
+            <span class="cmd-item-desc">Re-registrar el equipo en el servidor DNS.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="ipconfig /registerdns">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Restablecer la red</h4>
+      <div class="cmd-list">
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">netsh winsock reset</span>
+            <span class="cmd-item-desc">Restablecer Winsock. Soluciona pérdida de conexión a internet (requiere reinicio).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="netsh winsock reset">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">netsh int ip reset</span>
+            <span class="cmd-item-desc">Restablecer completamente la pila TCP/IP (requiere reinicio).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="netsh int ip reset">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">netsh advfirewall reset</span>
+            <span class="cmd-item-desc">Restablecer el Firewall de Windows a sus valores predeterminados.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="netsh advfirewall reset">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">route -f</span>
+            <span class="cmd-item-desc">Limpiar la tabla de rutas de red.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="route -f">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Diagnóstico avanzado</h4>
+      <div class="cmd-list">
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">ping -t 8.8.8.8</span>
+            <span class="cmd-item-desc">Probar conectividad continua a internet (Ctrl+C para detener).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="ping -t 8.8.8.8">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">tracert 8.8.8.8</span>
+            <span class="cmd-item-desc">Rastrear la ruta hasta un destino y ubicar dónde se corta la conexión.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="tracert 8.8.8.8">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">pathping 8.8.8.8</span>
+            <span class="cmd-item-desc">Medir pérdida de paquetes en cada salto de la ruta (ping + tracert combinados).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="pathping 8.8.8.8">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">nslookup pjud.cl</span>
+            <span class="cmd-item-desc">Resolver un nombre de dominio a su dirección IP.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="nslookup pjud.cl">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">netstat -ano</span>
+            <span class="cmd-item-desc">Ver conexiones activas y puertos en uso junto a su PID.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="netstat -ano">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">arp -a</span>
+            <span class="cmd-item-desc">Ver los dispositivos conectados en la red local (tabla ARP).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="arp -a">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Información del equipo</h4>
+      <div class="cmd-list">
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">wmic csproduct get name,identifyingnumber,vendor</span>
+            <span class="cmd-item-desc">Ver modelo, número de serie y fabricante del equipo.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="wmic csproduct get name,identifyingnumber,vendor">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">wmic bios get serialnumber</span>
+            <span class="cmd-item-desc">Ver el número de serie del equipo (alternativa).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="wmic bios get serialnumber">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">wmic os get caption,osarchitecture,version</span>
+            <span class="cmd-item-desc">Ver versión y arquitectura de Windows instalada.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="wmic os get caption,osarchitecture,version">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">systeminfo</span>
+            <span class="cmd-item-desc">Ver la información completa del sistema.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="systeminfo">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Reparación y limpieza del sistema</h4>
+      <div class="cmd-list">
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">DISM /Online /Cleanup-Image /StartComponentCleanup</span>
+            <span class="cmd-item-desc">Limpiar componentes de actualizaciones acumuladas.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="DISM /Online /Cleanup-Image /StartComponentCleanup">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">DISM /Online /Cleanup-Image /RestoreHealth</span>
+            <span class="cmd-item-desc">Reparar la imagen de Windows.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="DISM /Online /Cleanup-Image /RestoreHealth">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">sfc /scannow</span>
+            <span class="cmd-item-desc">Escanear y reparar archivos de sistema corruptos.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="sfc /scannow">Copiar</button>
+        </div>
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">chkdsk C: /f /r</span>
+            <span class="cmd-item-desc">Revisar y reparar errores del disco (requiere reinicio).</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="chkdsk C: /f /r">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Limpieza avanzada (WinUtil)</h4>
+      <div class="cmd-list">
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">iwr -useb https://christitus.com/win | iex</span>
+            <span class="cmd-item-desc">Abre WinUtil (Chris Titus Tech): herramienta de optimización y limpieza de Windows. Ejecutar en PowerShell como administrador.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="iwr -useb https://christitus.com/win | iex">Copiar</button>
+        </div>
+      </div>
+      <div class="procedure-note">
+        ⚠️ Herramienta de terceros con opciones avanzadas (debloat, tweaks, desinstalación de apps).
+        Revisar bien cada casilla antes de aplicar cambios; usar solo personal capacitado.
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Registrar librería de Windows</h4>
+      <div class="cmd-list">
+        <div class="cmd-item">
+          <div class="cmd-item-text">
+            <span class="cmd-item-code">REGSVR32 AMIOFFICE.OCX</span>
+            <span class="cmd-item-desc">Registrar la librería OCX de AmiOffice. Ejecutar como administrador desde la carpeta donde se encuentra el archivo.</span>
+          </div>
+          <button class="btn btn-hp copy-btn" data-text="REGSVR32 AMIOFFICE.OCX">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmd-group">
+      <h4>Acceso remoto VNC</h4>
+      <table class="cmd-vnc-table">
+        <thead>
+          <tr>
+            <th>Campo</th>
+            <th>Valor</th>
+            <th class="text-end">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Usuario</td>
+            <td class="cmd-item-code">upgcontrol</td>
+            <td class="text-end"><button class="btn btn-hp copy-btn" data-text="upgcontrol">Copiar</button></td>
+          </tr>
+          <tr>
+            <td>Contraseña de conexión</td>
+            <td class="cmd-item-code">S0p0rt3VnC</td>
+            <td class="text-end"><button class="btn btn-hp copy-btn" data-text="S0p0rt3VnC">Copiar</button></td>
+          </tr>
+          <tr>
+            <td>Contraseña configuración (TightVNC)</td>
+            <td class="cmd-item-code">zaq.@wsx</td>
+            <td class="text-end"><button class="btn btn-hp copy-btn" data-text="zaq.@wsx">Copiar</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="procedure-note">
+        Estas credenciales corresponden a la configuración de <strong>TightVNC</strong> para soporte remoto.
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <div class="custom-procedures" data-category="aplicativos">
   <h3>📎 Procedimientos adjuntados por usuarios</h3>
   <div class="custom-procedures-list" data-list-for="aplicativos">
