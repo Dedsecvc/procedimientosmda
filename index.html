@@ -3485,6 +3485,35 @@ button[onclick*="toggleStepImage"] {
       </div>
     </div>
 
+    <!-- 20. USUARIO NO SE ENCUENTRA -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: USUARIO NO SE ENCUENTRA</div>
+        <div class="card-body-hp">
+          Técnico se dirige al lugar y el usuario no está en su puesto de trabajo.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp copy-btn" data-text="Buenos días, técnico residente se dirige al lugar y el usuario no se encuentra en su lugar de trabajo. Se recoordina la atención en 30 minutos, manteniéndose a la hora indicada.">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 21. EN PROCESO DE PRUEBA -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: EN PROCESO DE PRUEBA</div>
+        <div class="card-body-hp">
+          Detalle lo que el técnico se encuentra realizando durante las pruebas.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#procesoTecnicoModal"
+              data-intro="Buenos días, técnico residente en proceso de prueba, se encuentra realizando:">
+            Ingresar Proceso
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <!-- FIN GRILLA -->
 
@@ -3870,7 +3899,8 @@ button[onclick*="toggleStepImage"] {
       const proceso = document.getElementById('procesoTexto').value.trim();
       if (!proceso) return alert('Ingrese el detalle del proceso');
       const pasos = proceso.split('\n').map(l => l.trim()).filter(Boolean).map(l => `- ${l}`).join('\n');
-      let text = `Buenos días, técnico residente da solución a la atención, realizando el siguiente proceso:\n\n${pasos}`;
+      const intro = currentButton?.getAttribute('data-intro') || 'Buenos días, técnico residente da solución a la atención, realizando el siguiente proceso:';
+      let text = `${intro}\n\n${pasos}`;
       const extra = currentButton?.getAttribute('data-append');
       if (extra) text += `\n\n${extra}`;
       navigator.clipboard.writeText(text);
