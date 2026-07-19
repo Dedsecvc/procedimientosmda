@@ -3471,6 +3471,20 @@ button[onclick*="toggleStepImage"] {
       </div>
     </div>
 
+    <!-- 19. ADJUNTAR OT (OCR) -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">📎 Adjuntar OT (Extraer Solución)</div>
+        <div class="card-body-hp">
+          Sube la Orden de Trabajo firmada (PDF o foto) y se extrae automáticamente
+          fecha, hora y descripción de la solución.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#otOcrModal">Adjuntar OT</button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <!-- FIN GRILLA -->
 
@@ -3694,6 +3708,54 @@ button[onclick*="toggleStepImage"] {
     </div>
   </div>
 
+  <!-- Modal Adjuntar OT (OCR) -->
+  <div class="modal fade" id="otOcrModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">📎 Adjuntar OT — Extraer Solución</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-2">
+            Sube la Orden de Trabajo firmada (PDF o foto/imagen). Se lee el documento
+            (OCR) y se extrae automáticamente la fecha, hora y descripción de la solución.
+            Revisa siempre los campos antes de copiar: el reconocimiento puede tener errores.
+          </p>
+
+          <div class="input-group mb-3">
+            <input type="file" class="form-control" id="otArchivoInput" accept="application/pdf,image/*">
+            <button type="button" class="btn btn-hp" id="otAnalizarBtn">Analizar OT</button>
+          </div>
+
+          <p id="otOcrStatus" class="text-muted small" hidden></p>
+
+          <div id="otOcrResultWrap" style="display:none;">
+            <div class="row g-3 mb-2">
+              <div class="col-md-6">
+                <label class="form-label">Fecha de Solución</label>
+                <input type="text" class="form-control" id="otFecha" placeholder="DD/MM/AAAA">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Hora de Solución</label>
+                <input type="text" class="form-control" id="otHora" placeholder="HH:MM">
+              </div>
+            </div>
+            <label class="form-label">Descripción de la Solución (editable)</label>
+            <textarea class="form-control mb-2" rows="5" id="otDescripcion"></textarea>
+
+            <button type="button" class="btn-img-toggle" id="otToggleTexto">Ver texto OCR completo</button>
+            <textarea class="form-control mt-2" rows="6" id="otTextoCompleto" readonly style="display:none; font-family:'Courier New',monospace; font-size:0.8rem;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-hp" id="copiarOtSolucion">Copiar Comentario de Solución</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT FUNCIONALIDADES -->
   <script>
     const ahora = new Date();
@@ -3814,6 +3876,155 @@ button[onclick*="toggleStepImage"] {
       navigator.clipboard.writeText(text);
       mostrarFeedback();
       bootstrap.Modal.getInstance(document.getElementById('procesoTecnicoModal')).hide();
+    });
+
+    // ==============================
+    // Adjuntar OT (OCR)
+    // ==============================
+    function cargarScriptOCR(src) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) return resolve();
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error('No se pudo cargar ' + src));
+        document.head.appendChild(s);
+      });
+    }
+
+    let otLibsPromise = null;
+    function asegurarLibsOT() {
+      if (!otLibsPromise) {
+        otLibsPromise = Promise.all([
+          cargarScriptOCR('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.min.js'),
+          cargarScriptOCR('https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js')
+        ]).then(() => {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js';
+        });
+      }
+      return otLibsPromise;
+    }
+
+    async function renderizarPrimeraPaginaPDF(arrayBuffer) {
+      const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 2.5 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+      return canvas;
+    }
+
+    function extraerCamposOT(texto) {
+      const fechaRe = /Fecha[^\n]{0,25}?(\d{1,2}\s*[\/\-]\s*\d{1,2}\s*[\/\-]\s*\d{2,4})/gi;
+      // "Hora" suele venir mal reconocido por el OCR (Mora/Nora/Wora) según la fuente del escaneo
+      const horaLabelRe = /[HMNWhmnw]ora[^\n]{0,25}?(\d{1,2}\s*:\s*\d{2}(?:\s*:\s*\d{2})?)/gi;
+      const horaAnyRe = /(\d{1,2}\s*:\s*\d{2}(?:\s*:\s*\d{2})?)/g;
+
+      const fechaMatches = [...texto.matchAll(fechaRe)];
+      let fecha = '';
+      if (fechaMatches.length) {
+        const solMatch = fechaMatches.find(m => /soluci/i.test(m[0]));
+        fecha = (solMatch || fechaMatches[fechaMatches.length - 1])[1].replace(/\s+/g, '');
+      }
+
+      let hora = '';
+      const horaMatches = [...texto.matchAll(horaLabelRe)];
+      if (horaMatches.length) {
+        const solMatch = horaMatches.find(m => /soluci/i.test(m[0]));
+        hora = (solMatch || horaMatches[horaMatches.length - 1])[1].replace(/\s+/g, '');
+      }
+      if (!hora) {
+        // Fallback: si no se detectó por etiqueta, se usa la última hora
+        // que aparece antes de la descripción (siempre corresponde a "Hora Solución").
+        const descIdx = texto.search(/descripci[oó0]n/i);
+        const ambito = descIdx > -1 ? texto.slice(0, descIdx) : texto;
+        const anyMatches = [...ambito.matchAll(horaAnyRe)];
+        if (anyMatches.length) hora = anyMatches[anyMatches.length - 1][1].replace(/\s+/g, '');
+      }
+
+      let descripcion = '';
+      const descMatch = texto.match(/descripci[oó0]n\s*del\s*soporte\s*([\s\S]*?)(?:Observaciones\s*del\s*Usuario|Observaciones|Nota\s*:|$)/i);
+      if (descMatch) {
+        descripcion = descMatch[1].replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      }
+
+      return { fecha, hora, descripcion };
+    }
+
+    function construirComentarioOT(fecha, hora, descripcion) {
+      let text = 'Buenos días, técnico residente da solución a la atención';
+      if (fecha) text += ` con fecha ${fecha}`;
+      if (hora) text += ` a las ${hora} hrs`;
+      text += `, realizando el siguiente proceso:\n\n${descripcion}`;
+      return text;
+    }
+
+    document.getElementById('otAnalizarBtn')?.addEventListener('click', async () => {
+      const input = document.getElementById('otArchivoInput');
+      const file = input.files[0];
+      const statusEl = document.getElementById('otOcrStatus');
+      const resultWrap = document.getElementById('otOcrResultWrap');
+      if (!file) { alert('Seleccione un archivo (PDF o imagen) de la OT'); return; }
+
+      statusEl.hidden = false;
+      statusEl.textContent = 'Cargando motor de análisis (OCR)...';
+      resultWrap.style.display = 'none';
+
+      try {
+        await asegurarLibsOT();
+
+        let ocrInput;
+        if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+          statusEl.textContent = 'Renderizando PDF...';
+          const buffer = await file.arrayBuffer();
+          ocrInput = await renderizarPrimeraPaginaPDF(buffer);
+        } else {
+          ocrInput = file;
+        }
+
+        statusEl.textContent = 'Analizando documento (OCR)... esto puede tardar unos segundos.';
+        const worker = await Tesseract.createWorker('spa');
+        const { data: { text } } = await worker.recognize(ocrInput);
+        await worker.terminate();
+
+        const { fecha, hora, descripcion } = extraerCamposOT(text);
+        document.getElementById('otFecha').value = fecha;
+        document.getElementById('otHora').value = hora;
+        document.getElementById('otDescripcion').value = descripcion;
+        document.getElementById('otTextoCompleto').value = text;
+
+        statusEl.hidden = true;
+        resultWrap.style.display = 'block';
+
+        if (!fecha || !hora || !descripcion) {
+          statusEl.hidden = false;
+          statusEl.textContent = 'No se detectaron todos los campos automáticamente. Complete o corrija manualmente antes de copiar.';
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Error al analizar el documento: ' + err.message;
+      }
+    });
+
+    document.getElementById('otToggleTexto')?.addEventListener('click', function () {
+      const txt = document.getElementById('otTextoCompleto');
+      const visible = txt.style.display !== 'none';
+      txt.style.display = visible ? 'none' : 'block';
+      this.textContent = visible ? 'Ver texto OCR completo' : 'Ocultar texto OCR completo';
+    });
+
+    document.getElementById('copiarOtSolucion')?.addEventListener('click', () => {
+      const fecha = document.getElementById('otFecha').value.trim();
+      const hora = document.getElementById('otHora').value.trim();
+      const descripcion = document.getElementById('otDescripcion').value.trim();
+      if (!descripcion) return alert('No se detectó la descripción de la solución. Complétela manualmente antes de copiar.');
+      const text = construirComentarioOT(fecha, hora, descripcion);
+      navigator.clipboard.writeText(text);
+      mostrarFeedback();
+      bootstrap.Modal.getInstance(document.getElementById('otOcrModal')).hide();
     });
 
     // Solucionado CON verificación
