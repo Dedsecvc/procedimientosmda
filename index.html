@@ -3945,18 +3945,47 @@ button[onclick*="toggleStepImage"] {
         if (anyMatches.length) hora = anyMatches[anyMatches.length - 1][1].replace(/\s+/g, '');
       }
 
-      // Se ancla solo en "descripci[oó]n" (sin exigir "del soporte" completo, ya que esa
-      // palabra suele salir mal en OCR de fotos/escaneos) y se toma todo hasta la
-      // siguiente sección conocida de la OT.
-      const cortes = '(?:\\n\\s*(?:Observaciones|Nota\\s*:|Firma|El siguiente documento)|$)';
+      // Descripción de la solución: se busca el final de la sección (Observaciones/Nota/Firma)
+      // y, dentro de todo lo anterior a ese punto, la ÚLTIMA vez que aparece "descripción"
+      // (o, si no se reconoce, "soporte") — así no importa si en el OCR el título y el
+      // párrafo quedaron en la misma línea o en líneas distintas.
+      const cutRe = /Observaciones\s*del\s*Usuario|Observaciones|Nota\s*:|Firma|El siguiente documento/i;
+      const cutMatch = texto.match(cutRe);
+      const finIdx = cutMatch ? cutMatch.index : texto.length;
+      const bloque = texto.slice(0, finIdx);
+
+      const anchorRe = /descripci[oó0]n(?:\s*del)?(?:\s*soporte)?\s*:?|soporte\s*:?/gi;
+      const anchorMatches = [...bloque.matchAll(anchorRe)];
+
       let descripcion = '';
-      let descMatch = texto.match(new RegExp('descripci[oó0]n[^\\n]*\\n+([\\s\\S]*?)' + cortes, 'i'));
-      if (!descMatch) {
-        // Fallback: si ni "descripción" se reconoció, se busca a partir de "Soporte"
-        descMatch = texto.match(new RegExp('soporte[^\\n]*\\n+([\\s\\S]*?)' + cortes, 'i'));
+      if (anchorMatches.length) {
+        const last = anchorMatches[anchorMatches.length - 1];
+        descripcion = bloque.slice(last.index + last[0].length);
       }
-      if (descMatch) {
-        descripcion = descMatch[1].replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+      descripcion = descripcion.replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+
+      // Último recurso: si no se encontró "descripción"/"soporte" o el resultado
+      // quedó demasiado corto (menos de 15 caracteres o sin palabras reales),
+      // se toma todo el texto que viene después de la última hora detectada en
+      // el bloque (la fila "Hora Solución"), recortando hasta el inicio de la
+      // primera oración con mayúscula. No depende de ninguna palabra específica.
+      if (descripcion.length < 15 || !/[a-zA-ZÀ-ÿ]{4,}/.test(descripcion)) {
+        const tiempos = [...bloque.matchAll(horaAnyRe)];
+        if (tiempos.length) {
+          const ultimo = tiempos[tiempos.length - 1];
+          let resto = bloque.slice(ultimo.index + ultimo[0].length);
+          // La fila siguiente en la plantilla es "Nombre Técnico ... Solución [tipo]";
+          // si está presente, se salta esa línea (ignorando líneas en blanco de por medio)
+          // antes de capturar la descripción.
+          const lineas = resto.split('\n');
+          let idxLinea = 0;
+          while (idxLinea < lineas.length && lineas[idxLinea].trim() === '') idxLinea++;
+          if (lineas[idxLinea] && /nombre|t[eé]cnico/i.test(lineas[idxLinea])) idxLinea++;
+          let alt = lineas.slice(idxLinea).join('\n');
+          alt = alt.replace(/^[\s\S]*?(?=[A-ZÁÉÍÓÚÑ])/, '');
+          alt = alt.replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
+          if (alt.length > descripcion.length) descripcion = alt;
+        }
       }
 
       return { fecha, hora, descripcion };
