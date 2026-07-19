@@ -3391,6 +3391,22 @@ button[onclick*="toggleStepImage"] {
       </div>
     </div>
 
+    <!-- 14b. SOLUCIÓN - PROCESO + OT FIRMADA -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card-custom">
+        <div class="card-header-hp">Técnico Residente: SOLUCIÓN - PROCESO + OT FIRMADA</div>
+        <div class="card-body-hp">
+          Detalle el proceso realizado e indique que se adjunta la orden de trabajo firmada.
+        </div>
+        <div class="card-footer-hp">
+          <button class="btn btn-hp" data-bs-toggle="modal" data-bs-target="#procesoTecnicoModal"
+              data-append="Se adjunta orden de trabajo firmada por el usuario.">
+            Ingresar Proceso
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 15. RECOORDINA POR OT FIRMADA -->
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card-custom">
@@ -3792,7 +3808,9 @@ button[onclick*="toggleStepImage"] {
       const proceso = document.getElementById('procesoTexto').value.trim();
       if (!proceso) return alert('Ingrese el detalle del proceso');
       const pasos = proceso.split('\n').map(l => l.trim()).filter(Boolean).map(l => `- ${l}`).join('\n');
-      const text = `Buenos días, técnico residente da solución a la atención, realizando el siguiente proceso:\n\n${pasos}`;
+      let text = `Buenos días, técnico residente da solución a la atención, realizando el siguiente proceso:\n\n${pasos}`;
+      const extra = currentButton?.getAttribute('data-append');
+      if (extra) text += `\n\n${extra}`;
       navigator.clipboard.writeText(text);
       mostrarFeedback();
       bootstrap.Modal.getInstance(document.getElementById('procesoTecnicoModal')).hide();
